@@ -1,0 +1,32 @@
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
+
+class Game:
+    def __init__(self):
+        self.diamonds = 0
+
+game = Game()
+
+def start(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text('Привет, добро пожаловать в игру Добыча Алмазов!')
+
+def click(update: Update, context: CallbackContext) -> None:
+    game.diamonds += 1
+    update.message.reply_text(f'Вы нажали! Собрано алмазов: {game.diamonds}')
+
+def score(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(f'Общее количество алмазов, собранных вами: {game.diamonds}')
+
+def main() -> None:
+    updater = Updater("TOKEN", use_context=True)
+    dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("click", click))
+    dispatcher.add_handler(CommandHandler("score", score))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
